@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 9e78f09e1375f8b478ccd3e1b8bf4fb0
+guid: a1bb044c940997746b222284164f4e31
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8830246600973551332
-    second: monster 1_0
+      213: 4610824035082985182
+    second: mirni 1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,7 +113,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: monster 1_0
+      name: mirni 1_0
       rect:
         serializedVersion: 2
         x: 747
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c19fed54089a47580800000000000000
-      internalID: -8830246600973551332
+      spriteID: ede54fcd700fcff30800000000000000
+      internalID: 4610824035082985182
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      monster 1_0: -8830246600973551332
+      mirni 1_0: 4610824035082985182
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
