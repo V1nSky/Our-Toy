@@ -2,20 +2,27 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 5f;
-    public float boundaryX = 8f;  // Граница по оси X
-    public float boundaryY = 4f;  // Граница по оси Y
+    public float moveSpeed = 7f;  // Скорость движения игрока
+    private float moveInputX;  // Направление движения по оси X
+    private float moveInputY;  // Направление движения по оси Y
 
     private void Update()
     {
-        // Получаем ввод с клавиш WASD
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        // Получаем ввод от игрока по горизонтали (влево/вправо) и вертикали (вверх/вниз)
+        moveInputX = Input.GetAxis("Horizontal");  // Ввод по оси X (A/D или стрелки влево/вправо)
+        moveInputY = Input.GetAxis("Vertical");    // Ввод по оси Y (W/S или стрелки вверх/вниз)
 
-        // Двигаем персонажа
-        Vector3 movement = new Vector3(horizontal, vertical, 0f) * moveSpeed * Time.deltaTime;
+        // Двигаем игрока по обеим осям (X и Y)
+        transform.Translate(new Vector3(moveInputX, moveInputY, 0) * moveSpeed * Time.deltaTime);
 
-        // Применяем движение к позиции персонажа с ограничениями по границам
-        transform.Translate(movement);
+        // Поворачиваем игрока в зависимости от направления движения по оси X
+        if (moveInputX < 0)  // Если игрок двигается влево
+        {
+            transform.localScale = new Vector3(-0.3787f, 0.3836f, 1f);  // Поворачиваем влево
+        }
+        else if (moveInputX > 0)  // Если игрок двигается вправо
+        {
+            transform.localScale = new Vector3(0.3787f, 0.3836f, 1f);  // Поворачиваем вправо
+        }
     }
 }
