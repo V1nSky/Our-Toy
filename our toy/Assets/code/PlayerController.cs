@@ -2,27 +2,42 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 7f;  // Скорость движения игрока
-    private float moveInputX;  // Направление движения по оси X
-    private float moveInputY;  // Направление движения по оси Y
+    public float moveSpeed = 7f;  // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+    private float moveInputX;
+    private float moveInputY;
+    private Rigidbody2D rb;
+
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody2D>(); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Rigidbody2D
+    }
 
     private void Update()
     {
-        // Получаем ввод от игрока по горизонтали (влево/вправо) и вертикали (вверх/вниз)
-        moveInputX = Input.GetAxis("Horizontal");  // Ввод по оси X (A/D или стрелки влево/вправо)
-        moveInputY = Input.GetAxis("Vertical");    // Ввод по оси Y (W/S или стрелки вверх/вниз)
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+        moveInputX = Input.GetAxisRaw("Horizontal");
+        moveInputY = Input.GetAxisRaw("Vertical");
 
-        // Двигаем игрока по обеим осям (X и Y)
-        transform.Translate(new Vector3(moveInputX, moveInputY, 0) * moveSpeed * Time.deltaTime);
-
-        // Поворачиваем игрока в зависимости от направления движения по оси X
-        if (moveInputX < 0)  // Если игрок двигается влево
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+        if (moveInputX < 0)
         {
-            transform.localScale = new Vector3(-10f, 10f, 10f);  // Поворачиваем влево
+            transform.localScale = new Vector3(-10f, 10f, 10f);
         }
-        else if (moveInputX > 0)  // Если игрок двигается вправо
+        else if (moveInputX > 0)
         {
-            transform.localScale = new Vector3(10f, 10f, 10f);  // Поворачиваем вправо
+            transform.localScale = new Vector3(10f, 10f, 10f);
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ Rigidbody2D, пїЅ пїЅпїЅ transform!
+        rb.linearVelocity = new Vector2(moveInputX, moveInputY).normalized * moveSpeed;
+
+        // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+        if (rb.linearVelocity.magnitude < 0.1f)
+        {
+            rb.linearVelocity = Vector2.zero;
         }
     }
 }

@@ -2,38 +2,38 @@ using UnityEngine;
 
 public class MonsterController : MonoBehaviour
 {
-    public float moveSpeed = 1.5f;               // Скорость монстра
-    public Transform player;                   // Ссылка на трансформ игрока
+    public float moveSpeed = 1.5f;               // РЎРєРѕСЂРѕСЃС‚СЊ РјРѕРЅСЃС‚СЂР°
+    public Transform player;                     // РЎСЃС‹Р»РєР° РЅР° С‚СЂР°РЅСЃС„РѕСЂРј РёРіСЂРѕРєР°
+    private Rigidbody2D rb;                      // Rigidbody2D РјРѕРЅСЃС‚СЂР°
 
-    // Границы экрана для монстра
-    public float boundaryX = 8f;
-    public float boundaryY = 4f;
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody2D>(); // РџРѕР»СѓС‡Р°РµРј РєРѕРјРїРѕРЅРµРЅС‚ Rigidbody2D
+    }
 
     private void Update()
     {
-        if (player == null) return; // Если нет игрока, ничего не делаем
+        if (player == null) return; // Р•СЃР»Рё РЅРµС‚ РёРіСЂРѕРєР°, РЅРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµРј
 
-        // Проверяем, находится ли игрок слева или справа от монстра
-        if (player.position.x < transform.position.x)  // Игрок слева
+        // РџСЂРѕРІРµСЂСЏРµРј, РЅР°С…РѕРґРёС‚СЃСЏ Р»Рё РёРіСЂРѕРє СЃР»РµРІР° РёР»Рё СЃРїСЂР°РІР° РѕС‚ РјРѕРЅСЃС‚СЂР°
+        if (player.position.x < transform.position.x)  // РРіСЂРѕРє СЃР»РµРІР°
         {
-            // Поворачиваем монстра налево
-            transform.localScale = new Vector3(-10f, 10f, 10f);  // Изменяем масштаб по X на -1 для зеркального отражения
+            // РџРѕРІРѕСЂР°С‡РёРІР°РµРј РјРѕРЅСЃС‚СЂР° РЅР°Р»РµРІРѕ, РЅРѕ РёР·РјРµРЅСЏРµРј С‚РѕР»СЊРєРѕ РјР°СЃС€С‚Р°Р± РїРѕ РѕСЃРё X
+            transform.localScale = new Vector3(-10f, 10f, 1f);  // РћС‚СЂР°Р¶РµРЅРёРµ РїРѕ X
         }
-        else  // Игрок справа
+        else  // РРіСЂРѕРє СЃРїСЂР°РІР°
         {
-            // Поворачиваем монстра направо
-            transform.localScale = new Vector3(10f, 10f, 10f);  // Восстанавливаем нормальный масштаб
+            // РџРѕРІРѕСЂР°С‡РёРІР°РµРј РјРѕРЅСЃС‚СЂР° РЅР°РїСЂР°РІРѕ
+            transform.localScale = new Vector3(10f, 10f, 1f);  // РќРѕСЂРјР°Р»СЊРЅС‹Р№ РјР°СЃС€С‚Р°Р±
         }
 
-        // 1. Рассчитываем направление от монстра к игроку
+        // Р Р°СЃСЃС‡РёС‚С‹РІР°РµРј РЅР°РїСЂР°РІР»РµРЅРёРµ РѕС‚ РјРѕРЅСЃС‚СЂР° Рє РёРіСЂРѕРєСѓ
         Vector3 directionToPlayer = player.position - transform.position;
 
-        // 2. Нормализуем это направление (чтобы скорость была постоянной)
+        // РќРѕСЂРјР°Р»РёР·СѓРµРј СЌС‚Рѕ РЅР°РїСЂР°РІР»РµРЅРёРµ (С‡С‚РѕР±С‹ СЃРєРѕСЂРѕСЃС‚СЊ Р±С‹Р»Р° РїРѕСЃС‚РѕСЏРЅРЅРѕР№)
         directionToPlayer.Normalize();
 
-        // 3. Перемещаем монстра в сторону игрока
-        transform.Translate(directionToPlayer * moveSpeed * Time.deltaTime);
-
-
+        // РџРµСЂРµРјРµС‰Р°РµРј РјРѕРЅСЃС‚СЂР° СЃ РїРѕРјРѕС‰СЊСЋ Rigidbody2D
+        rb.linearVelocity = new Vector2(directionToPlayer.x, directionToPlayer.y) * moveSpeed;
     }
 }
