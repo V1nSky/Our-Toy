@@ -10,7 +10,7 @@ public class CameraFollow : MonoBehaviour
     void Start()
     {
         // Устанавливаем начальное смещение камеры (например, отодвигаем её немного по оси Z)
-        offset = transform.position;
+        offset = transform.position - player.position;
     }
 
     void Update()

@@ -18,11 +18,11 @@ public class PlayerController : MonoBehaviour
         // Поворачиваем игрока в зависимости от направления движения по оси X
         if (moveInputX < 0)  // Если игрок двигается влево
         {
-            transform.localScale = new Vector3(-0.3787f, 0.3836f, 1f);  // Поворачиваем влево
+            transform.localScale = new Vector3(-10f, 10f, 10f);  // Поворачиваем влево
         }
         else if (moveInputX > 0)  // Если игрок двигается вправо
         {
-            transform.localScale = new Vector3(0.3787f, 0.3836f, 1f);  // Поворачиваем вправо
+            transform.localScale = new Vector3(10f, 10f, 10f);  // Поворачиваем вправо
         }
     }
 }

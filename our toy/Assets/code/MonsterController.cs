@@ -17,12 +17,12 @@ public class MonsterController : MonoBehaviour
         if (player.position.x < transform.position.x)  // Игрок слева
         {
             // Поворачиваем монстра налево
-            transform.localScale = new Vector3(-1f, 1f, 1f);  // Изменяем масштаб по X на -1 для зеркального отражения
+            transform.localScale = new Vector3(-10f, 10f, 10f);  // Изменяем масштаб по X на -1 для зеркального отражения
         }
         else  // Игрок справа
         {
             // Поворачиваем монстра направо
-            transform.localScale = new Vector3(1f, 1f, 1f);  // Восстанавливаем нормальный масштаб
+            transform.localScale = new Vector3(10f, 10f, 10f);  // Восстанавливаем нормальный масштаб
         }
 
         // 1. Рассчитываем направление от монстра к игроку
