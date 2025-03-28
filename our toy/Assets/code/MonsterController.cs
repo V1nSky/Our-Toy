@@ -6,12 +6,13 @@ public class MonsterController : MonoBehaviour
     public Transform player;
     public float detectionRadius = 5f;
     public float visionAngle = 90f;
-    public float smoothStop = 5f;         // Чем больше, тем быстрее остановка
-    public float smoothStart = 2f;             // Чем больше, тем быстрее разгон
+    public float smoothStop = 5f;   // Чем больше, тем быстрее остановка
+    public float smoothStart = 2f;  // Чем больше, тем быстрее разгон
     public float stopDistance = 1f;
+    public Transform[] patrolPoints;
 
     private Rigidbody2D rb;
-    private Vector2 desiredVelocity = Vector2.zero;
+    private int currentPatrolIndex = 0;
 
     private void Start()
     {
@@ -22,57 +23,50 @@ public class MonsterController : MonoBehaviour
     {
         if (player == null) return;
 
-        Vector2 directionToPlayer = player.position - transform.position;
-        float distance = directionToPlayer.magnitude;
+        Vector2 desiredVelocity = Vector2.zero;
 
-        // Угол между взглядом монстра и игроком
+        Vector2 directionToPlayer = player.position - transform.position;
+        float distanceToPlayer = directionToPlayer.magnitude;
         Vector2 dirToPlayerNorm = directionToPlayer.normalized;
         float angleToPlayer = Vector2.Angle(transform.right, dirToPlayerNorm);
 
-        Vector2 desiredVelocity = Vector2.zero;
-
-        if (distance <= detectionRadius && angleToPlayer <= visionAngle / 2f)
+        // ====== Преследование ======
+        if (distanceToPlayer <= detectionRadius && angleToPlayer <= visionAngle / 2f)
         {
-            if (distance > stopDistance)
+            if (distanceToPlayer > stopDistance)
             {
                 desiredVelocity = dirToPlayerNorm * moveSpeed;
             }
         }
-
-        // Плавное разгон и замедление
-        rb.linearVelocity = Vector2.Lerp(rb.linearVelocity, desiredVelocity, Time.deltaTime * smoothStart);
-        rb.linearVelocity = Vector2.Lerp(rb.linearVelocity, desiredVelocity, Time.deltaTime * smoothStop);
-
-        // Определяем в какую сторону смотрит монстр
-        if (player.position.x < transform.position.x)
-            transform.localScale = new Vector3(-10f, 10f, 1f); // Поворачиваем налево
         else
-            transform.localScale = new Vector3(10f, 10f, 1f);  // Поворачиваем направо
-    }
+        {
+            // ====== Патруль ======
+            if (patrolPoints.Length > 0)
+            {
+                Transform targetPoint = patrolPoints[currentPatrolIndex];
+                Vector2 dirToPoint = (targetPoint.position - transform.position);
+                float distanceToPoint = dirToPoint.magnitude;
 
+                if (distanceToPoint < 0.2f) // Достиг точки
+                {
+                    currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
+                }
+                else
+                {
+                    desiredVelocity = dirToPoint.normalized * moveSpeed;
+                }
+            }
+        }
 
-    // Проверка на столкновение с игроком
-    //private void OnCollisionEnter2D(Collision2D collision)
-    //{
-      //  if (collision.gameObject.CompareTag("Player"))
-        //{
-            // Действие при столкновении с игроком (например, смерть)
-          //  Destroy(collision.gameObject);  // Уничтожаем игрока
-            //Debug.Log("Player is dead!");
-        //}
-    //}
+        // ====== Плавное ускорение/замедление ======
+        rb.linearVelocity = Vector2.Lerp(rb.linearVelocity, desiredVelocity, Time.deltaTime * (desiredVelocity.magnitude > 0.1f ? smoothStart : smoothStop));
 
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, detectionRadius);
-
-        Vector3 leftDir = Quaternion.Euler(0, 0, -visionAngle / 2) * Vector2.right;
-        Vector3 rightDir = Quaternion.Euler(0, 0, visionAngle / 2) * Vector2.right;
-
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(transform.position, transform.position + leftDir * detectionRadius);
-        Gizmos.DrawLine(transform.position, transform.position + rightDir * detectionRadius);
+        // ====== Поворот ======
+        if (rb.linearVelocity.x < -0.1f)
+            transform.localScale = new Vector3(-10f, 10f, 1f);
+        else if (rb.linearVelocity.x > 0.1f)
+            transform.localScale = new Vector3(10f, 10f, 1f);
     }
 }
+
+
