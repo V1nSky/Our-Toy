@@ -41,7 +41,7 @@ public class PlayerController : MonoBehaviour
 
         // Останавливаем движение
         rb.linearVelocity = Vector2.zero;  // Останавливаем движение
-        rb.isKinematic = true;  // Блокируем физику, чтобы персонаж не двигался
+        rb.bodyType = RigidbodyType2D.Kinematic; // Блокируем физику, чтобы персонаж не двигался
 
         // Отключаем только обработку движения
         this.GetComponent<PlayerController>().enabled = false;
