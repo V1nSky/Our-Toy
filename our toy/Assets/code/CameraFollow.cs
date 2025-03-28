@@ -9,16 +9,25 @@ public class CameraFollow : MonoBehaviour
 
     void Start()
     {
-        // ”станавливаем начальное смещение камеры (например, отодвигаем еЄ немного по оси Z)
-        offset = transform.position - player.position;
+        if (player != null)  // ѕроверка на null в начале
+        {
+            offset = transform.position - player.position;
+        }
     }
 
     void Update()
     {
-        // ѕозици€ камеры будет следовать за позицией игрока с учетом смещени€
-        Vector3 targetPosition = player.position + offset;
+        if (player != null)  // ѕроверка, что игрок существует
+        {
+            // ѕозици€ камеры будет следовать за позицией игрока с учетом смещени€
+            Vector3 targetPosition = player.position + offset;
 
-        // ѕлавное движение камеры с заданной скоростью
-        transform.position = Vector3.Lerp(transform.position, targetPosition, smoothing * Time.deltaTime);
+            // ѕлавное движение камеры с заданной скоростью
+            transform.position = Vector3.Lerp(transform.position, targetPosition, smoothing * Time.deltaTime);
+        }
+        else
+        {
+            Debug.LogWarning("Player object is destroyed, camera can't follow.");
+        }
     }
 }

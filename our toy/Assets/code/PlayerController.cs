@@ -16,6 +16,9 @@ public class PlayerController : MonoBehaviour
     public Sprite diagonalBackLeftSprite;   // Спрайт вверх-влево (спина + бок)
     public Sprite diagonalFrontRightSprite; // Спрайт вниз-вправо (лицо + бок)
     public Sprite diagonalFrontLeftSprite;  // Спрайт вниз-влево (лицо + бок)
+    public Sprite deadSprite; // Спрайт умер
+
+    private bool isDead = false; // Флаг смерти
 
     private void Start()
     {
@@ -23,8 +26,36 @@ public class PlayerController : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Monster") && !isDead)
+        {
+            Die(); // Если столкновение с монстром — умираем
+        }
+    }
+
+    private void Die()
+    {
+        isDead = true;  // Устанавливаем флаг смерти
+        spriteRenderer.sprite = deadSprite;  // Меняем спрайт на мертвого
+
+        // Останавливаем движение
+        rb.linearVelocity = Vector2.zero;  // Останавливаем движение
+        rb.isKinematic = true;  // Блокируем физику, чтобы персонаж не двигался
+
+        // Отключаем только обработку движения
+        this.GetComponent<PlayerController>().enabled = false;
+
+        // Логируем смерть
+        Debug.Log("Player has fallen and died.");
+    }
+
+
+
     private void Update()
     {
+        if (isDead) return; // Если игрок мертв, не обрабатываем движение
+
         moveInputX = Input.GetAxisRaw("Horizontal");
         moveInputY = Input.GetAxisRaw("Vertical");
 
@@ -63,18 +94,20 @@ public class PlayerController : MonoBehaviour
         {
             if (moveInputX < 0)
             {
-                transform.localScale = new Vector3(-10f, 10f, 10f);
+                transform.localScale = new Vector3(-10f, 10f, 10f);  // Левый поворот
             }
             else if (moveInputX > 0)
             {
-                transform.localScale = new Vector3(10f, 10f, 10f);
+                transform.localScale = new Vector3(10f, 10f, 10f);   // Правый поворот
             }
         }
-
     }
 
     private void FixedUpdate()
     {
+        if (isDead) return; // Если игрок мертв, не обрабатываем движение
+
+        // Применяем движение
         rb.linearVelocity = new Vector2(moveInputX, moveInputY).normalized * moveSpeed;
     }
 }
